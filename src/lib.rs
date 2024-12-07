@@ -42,7 +42,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                     {
                         match method_name.as_str() {
                             "submit_with_args" => {
-                                if let Ok(args) = borsh::de::from_slice::<SubmitArgs>(&args) {
+                                if let Ok(args) = borsh::de::from_slice::<SubmitArgs>(args) {
                                     if let Ok(transaction_kind) =
                                         EthTransactionKind::try_from(args.tx_data.as_slice())
                                     {
@@ -53,7 +53,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                                 &receipt.receipt.execution_outcome.outcome.status
                                             {
                                                 if let Ok(result) =
-                                                    borsh::de::from_slice::<SubmitResult>(&value)
+                                                    borsh::de::from_slice::<SubmitResult>(value)
                                                 {
                                                     let tx_hash =
                                                         aurora_engine_sdk::keccak(&args.tx_data);
@@ -103,9 +103,9 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                             &receipt.receipt.execution_outcome.outcome.status
                                         {
                                             if let Ok(result) =
-                                                borsh::de::from_slice::<SubmitResult>(&value)
+                                                borsh::de::from_slice::<SubmitResult>(value)
                                             {
-                                                let tx_hash = aurora_engine_sdk::keccak(&args);
+                                                let tx_hash = aurora_engine_sdk::keccak(args);
                                                 let tx = AuroraTransactionEvent {
                                                     block_height: block.block.header.height,
                                                     block_timestamp_nanosec: block
@@ -141,7 +141,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                 }
                             }
                             "call" => {
-                                if let Some(call_args) = CallArgs::deserialize(&args) {
+                                if let Some(call_args) = CallArgs::deserialize(args) {
                                     let _from = near_account_to_evm_address(
                                         receipt.receipt.receipt.predecessor_id.as_bytes(),
                                     );
@@ -157,7 +157,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                         &receipt.receipt.execution_outcome.outcome.status
                                     {
                                         if let Ok(_result) =
-                                            borsh::de::from_slice::<SubmitResult>(&v)
+                                            borsh::de::from_slice::<SubmitResult>(v)
                                         {
                                             // TODO how to get the tx hash
                                         }
