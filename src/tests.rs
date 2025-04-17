@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use aurora_indexer::{AuroraEventHandler, AuroraIndexer};
 use inindexer::{
     near_indexer_primitives::types::BlockHeight, neardata::NeardataProvider, run_indexer,
-    BlockIterator, IndexerOptions, PreprocessTransactionsSettings,
+    BlockRange, IndexerOptions, PreprocessTransactionsSettings,
 };
 
 use intear_events::events::aurora::transaction::AuroraTransactionEvent;
@@ -32,12 +32,14 @@ async fn detects_submit() {
         &mut indexer,
         NeardataProvider::mainnet(),
         IndexerOptions {
-            range: BlockIterator::iterator(134295233..=134295235),
             preprocess_transactions: Some(PreprocessTransactionsSettings {
                 prefetch_blocks: 0,
                 postfetch_blocks: 0,
             }),
-            ..Default::default()
+            ..IndexerOptions::default_with_range(BlockRange::Range {
+                start_inclusive: 134295233,
+                end_exclusive: Some(134295235),
+            })
         },
     )
     .await
@@ -61,12 +63,14 @@ async fn detects_submit_with_args() {
         &mut indexer,
         NeardataProvider::mainnet(),
         IndexerOptions {
-            range: BlockIterator::iterator(134404191..=134404193),
             preprocess_transactions: Some(PreprocessTransactionsSettings {
                 prefetch_blocks: 0,
                 postfetch_blocks: 0,
             }),
-            ..Default::default()
+            ..IndexerOptions::default_with_range(BlockRange::Range {
+                start_inclusive: 134404191,
+                end_exclusive: Some(134404193),
+            })
         },
     )
     .await

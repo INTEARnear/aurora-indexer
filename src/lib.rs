@@ -83,6 +83,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                                             aurora_engine_types::parameters::engine::TransactionStatus::OutOfFund => TransactionStatus::OutOfFund,
                                                             aurora_engine_types::parameters::engine::TransactionStatus::OutOfOffset => TransactionStatus::OutOfOffset,
                                                             aurora_engine_types::parameters::engine::TransactionStatus::CallTooDeep => TransactionStatus::CallTooDeep,
+                                                            _ => TransactionStatus::Revert("".as_bytes().to_vec()), // there are more error types added since the indexer was created. Since it's a dynamic field, and mostly no one cares about the specifics of the failure, we just make a backwards compatible default
                                                         },
                                                     };
                                                     self.0.handle_transaction(tx).await;
@@ -132,6 +133,7 @@ impl<T: AuroraEventHandler + Send + Sync + 'static> Indexer for AuroraIndexer<T>
                                                         aurora_engine_types::parameters::engine::TransactionStatus::OutOfFund => TransactionStatus::OutOfFund,
                                                         aurora_engine_types::parameters::engine::TransactionStatus::OutOfOffset => TransactionStatus::OutOfOffset,
                                                         aurora_engine_types::parameters::engine::TransactionStatus::CallTooDeep => TransactionStatus::CallTooDeep,
+                                                        _ => TransactionStatus::Revert("".as_bytes().to_vec()),
                                                     },
                                                 };
                                                 self.0.handle_transaction(tx).await;
